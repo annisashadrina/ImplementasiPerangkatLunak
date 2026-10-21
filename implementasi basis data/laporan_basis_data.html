@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Laporan Tugas Basis Data - Streamly</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 18mm 15mm 18mm 15mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Inter', sans-serif;
+        font-size: 9pt;
+        color: #718096;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 10pt;
+      line-height: 1.55;
+      color: #2D3748;
+      background-color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #1A202C;
+      margin-top: 1.2em;
+      margin-bottom: 0.5em;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 18pt;
+      border-bottom: 2px solid #319795;
+      padding-bottom: 6px;
+      color: #234E52;
+    }
+
+    h2 {
+      font-size: 13pt;
+      border-left: 4px solid #319795;
+      padding-left: 10px;
+      margin-top: 1.4em;
+      color: #285E61;
+    }
+
+    h3 {
+      font-size: 11pt;
+      color: #2C7A7B;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 0.8em;
+      text-align: justify;
+    }
+
+    .cover-page {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 94vh;
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+    }
+
+    .cover-header {
+      margin-top: 30px;
+    }
+
+    .cover-title {
+      font-size: 22pt;
+      font-weight: 800;
+      color: #1A202C;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .cover-subtitle {
+      font-size: 13pt;
+      font-weight: 600;
+      color: #319795;
+      margin-bottom: 15px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: #E6FFFA;
+      color: #234E52;
+      border: 1px solid #B2F5EA;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 9.5pt;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .cover-members {
+      margin: 40px auto;
+      width: 90%;
+    }
+
+    .member-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 9.5pt;
+    }
+
+    .member-table th {
+      background-color: #2C7A7B;
+      color: #FFFFFF;
+      padding: 8px;
+      border: 1px solid #285E61;
+      text-align: center;
+    }
+
+    .member-table td {
+      padding: 7px 10px;
+      border: 1px solid #CBD5E0;
+    }
+
+    .member-table tr:nth-child(even) {
+      background-color: #F7FAFC;
+    }
+
+    .cover-footer {
+      margin-bottom: 20px;
+      font-size: 10pt;
+      color: #4A5568;
+      line-height: 1.4;
+    }
+
+    .section-break {
+      page-break-before: always;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px 0;
+      font-size: 8.5pt;
+      page-break-inside: avoid;
+    }
+
+    table.data-table th {
+      background-color: #EDF2F7;
+      color: #2D3748;
+      font-weight: 700;
+      padding: 6px 8px;
+      border: 1px solid #CBD5E0;
+      text-align: left;
+    }
+
+    table.data-table td {
+      padding: 5px 8px;
+      border: 1px solid #E2E8F0;
+      vertical-align: top;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background-color: #F7FAFC;
+    }
+
+    pre {
+      background-color: #1A202C;
+      color: #EDF2F7;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5pt;
+      line-height: 1.45;
+      padding: 10px 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 8px 0 16px 0;
+      border: 1px solid #2D3748;
+      page-break-inside: avoid;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      background-color: #EDF2F7;
+      color: #C53030;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+    }
+
+    .highlight-card {
+      background-color: #F0FFF4;
+      border-left: 4px solid #38A169;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 9pt;
+    }
+
+    .warning-card {
+      background-color: #FFFAF0;
+      border-left: 4px solid #DD6B20;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 9pt;
+    }
+
+    .badge-primary {
+      background-color: #E6FFFA;
+      color: #234E52;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 7.5pt;
+    }
+
+    .badge-foreign {
+      background-color: #FEFCBF;
+      color: #744210;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 7.5pt;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HALAMAN SAMPUL ==================== -->
+  <div class="cover-page">
+    <div class="cover-header">
+      <div class="cover-title">Laporan Tugas Perancangan Basis Data</div>
+      <div class="cover-subtitle">Sintaks SQL DDL (Create Table) & DML (Insert 5 Data)</div>
+      <div class="cover-badge">Proyek TUBES: Streamly (Social Commerce Live Streaming Co-Pilot)</div>
+      <p style="text-align: center; color: #4A5568; max-width: 80%; margin: 0 auto; font-size: 9.5pt;">
+        Pengembangan Skema Relasional Kompleks (Kategori Nilai &gt; B): Integrasi Modul Toko/Merchant, Produk, Kasir/Transaksi Penjualan, Sesi Live Stream, dan AI Temporal Insights.
+      </p>
+    </div>
+
+    <div class="cover-members">
+      <h3 style="margin-bottom: 8px; color: #1A202C;">Disusun oleh Kelompok:</h3>
+      <table class="member-table">
+        <thead>
+          <tr>
+            <th style="width: 10%;">No</th>
+            <th style="width: 55%;">Nama Lengkap</th>
+            <th style="width: 35%;">NIM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center;">1</td>
+            <td><strong>Aryo Abdillah Ainnurrofiq</strong></td>
+            <td style="text-align: center;">103072400006</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;">2</td>
+            <td><strong>Annisa Nur Shadrina</strong></td>
+            <td style="text-align: center;">103072400134</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;">3</td>
+            <td><strong>Fadia Nabila Shifa</strong></td>
+            <td style="text-align: center;">10307200066</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;">4</td>
+            <td><strong>Refito Rahmat Firmansyah</strong></td>
+            <td style="text-align: center;">103072430002</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;">5</td>
+            <td><strong>Revaldi Ramadhan Nugraha</strong></td>
+            <td style="text-align: center;">103072400059</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cover-footer">
+      <strong>PROGRAM STUDI S1 INFORMATIKA</strong><br>
+      FAKULTAS INFORMATIKA — UNIVERSITAS TELKOM<br>
+      Mata Kuliah: Implementasi Perangkat Lunak (IMPAL)<br>
+      Tahun Ajaran 2026
+    </div>
+  </div>
+
+  <!-- ==================== BAB 1 ==================== -->
+  <div class="section-break">
+    <h1>1. Deskripsi Arsitektur Basis Data Streamly</h1>
+    <p>
+      Sesuai dokumen Spesifikasi Kebutuhan Perangkat Lunak (SKPL), <strong>Streamly</strong> dirancang sebagai <em>Intelligent Omni-Channel Live Streaming Co-Pilot</em> yang mendukung interaksi <em>social commerce</em> saat siaran langsung. Pada berkas sketsa awal (<code>skets/streamly_db_design</code>), sistem baru mencakup pemrosesan internal scraper chat dan ringkasan AI (5 tabel dasar).
+    </p>
+
+    <div class="highlight-card">
+      <strong>Pemenuhan Rubrik Penilaian Nilai &gt; B:</strong><br>
+      Untuk mencapai nilai di atas B (A), skema basis data diperluas dengan menambahkan entitas transaksi nyata sesuai proses bisnis live shopping: <strong>Toko/Merchant (Pelaku UMKM)</strong>, <strong>Katalog Produk</strong>, <strong>Etalase Keranjang Kuning</strong>, serta <strong>Kasir/Transaksi Pembelian (Orders & Order Items)</strong> yang berelasi penuh dengan data streaming dan analitik AI.
+    </div>
+
+    <h2>Struktur 11 Tabel Terintegrasi</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Tabel</th>
+          <th>Kategori Domain</th>
+          <th>Fungsi dan Relasi Utama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><code>users</code></td>
+          <td>Manajemen Akun</td>
+          <td>Menyimpan pengguna sistem: Host, Streamer, Admin Toko, dan Analis.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>merchants</code></td>
+          <td>Entitas Bisnis (Toko)</td>
+          <td>Data Toko/UMKM di TikTok Shop yang dimiliki oleh user (Admin Toko).</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>products</code></td>
+          <td>Katalog Penjualan</td>
+          <td>Produk milik toko beserta harga, SKU, dan stok barang.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><code>live_sessions</code></td>
+          <td>Aktivitas Streaming</td>
+          <td>Sesi siaran live yang diselenggarakan toko dan dibawakan oleh streamer.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><code>session_pinned_products</code></td>
+          <td>Etalase Live</td>
+          <td>Relasi Many-to-Many produk yang di-pin di keranjang kuning saat sesi live.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><code>messages</code></td>
+          <td>Komentar Audiens</td>
+          <td>Komentar penonton yang ditangkap WebSocket Scraper per sesi siaran.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><code>orders</code></td>
+          <td>Kasir & Transaksi</td>
+          <td>Pencatatan transaksi kasir live yang terjadi selama sesi streaming.</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><code>order_items</code></td>
+          <td>Detail Transaksi Kasir</td>
+          <td>Daftar kuantiti dan subtotal produk yang dibeli per transaksi kasir.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><code>insights</code></td>
+          <td>Kecerdasan Buatan (AI)</td>
+          <td>Hasil inferensi model Gemini 2.5 Flash dalam jendela 5m, 20m, dan 45m.</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><code>insight_messages</code></td>
+          <td>Provenance Data</td>
+          <td>Pelacakan komentar mentah mana saja yang dianalisis dalam laporan 5m.</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><code>insight_dependencies</code></td>
+          <td>Sintesis Hierarkis</td>
+          <td>Relasi turunan sintesis analitik (laporan 5m menjadi input 20m dan 45m).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== BAB 2 ==================== -->
+  <div class="section-break">
+    <h1>2. Sintaks SQL DDL (Create Semua Tabel)</h1>
+    <p>
+      Berikut adalah sintaks lengkap pembuatan database dan 11 tabel berelasi menggunakan mesin penyimpanan InnoDB, lengkap dengan primary key, foreign key, index, dan check constraint.
+    </p>
+
+    <pre><code>-- 1. PEMBUATAN DATABASE
+CREATE DATABASE IF NOT EXISTS streamly_db
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE streamly_db;
+
+-- 2. TABEL USERS (Akun Pengguna Sistem)
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(100) NOT NULL,
+  role ENUM('streamer', 'store_admin', 'analyst') NOT NULL DEFAULT 'streamer',
+  phone_number VARCHAR(20) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_users_username (username),
+  UNIQUE KEY uk_users_email (email)
+) ENGINE=InnoDB;
+
+-- 3. TABEL MERCHANTS (Toko / Pelaku UMKM)
+CREATE TABLE IF NOT EXISTS merchants (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  owner_id BIGINT UNSIGNED NOT NULL,
+  store_name VARCHAR(100) NOT NULL,
+  tiktok_shop_id VARCHAR(100) NULL,
+  category VARCHAR(50) NOT NULL,
+  city VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_merchants_tiktok_shop (tiktok_shop_id),
+  KEY idx_merchants_owner (owner_id),
+  CONSTRAINT fk_merchants_owner FOREIGN KEY (owner_id)
+    REFERENCES users(id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- 4. TABEL PRODUCTS (Katalog Barang Dagangan)
+CREATE TABLE IF NOT EXISTS products (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  merchant_id BIGINT UNSIGNED NOT NULL,
+  sku VARCHAR(50) NOT NULL,
+  name VARCHAR(150) NOT NULL,
+  description TEXT NULL,
+  price DECIMAL(12,2) NOT NULL,
+  stock INT UNSIGNED NOT NULL DEFAULT 0,
+  category VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_products_sku (sku),
+  KEY idx_products_merchant (merchant_id),
+  CONSTRAINT fk_products_merchant FOREIGN KEY (merchant_id)
+    REFERENCES merchants(id) ON DELETE CASCADE,
+  CONSTRAINT chk_products_price CHECK (price >= 0)
+) ENGINE=InnoDB;
+
+-- 5. TABEL LIVE_SESSIONS (Sesi Siaran Langsung)
+CREATE TABLE IF NOT EXISTS live_sessions (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  merchant_id BIGINT UNSIGNED NOT NULL,
+  host_user_id BIGINT UNSIGNED NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  tiktok_username VARCHAR(100) NOT NULL,
+  room_id VARCHAR(100) NULL,
+  status ENUM('starting', 'active', 'ended', 'failed') NOT NULL DEFAULT 'starting',
+  started_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  ended_at DATETIME(3) NULL,
+  total_views INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_sessions_merchant (merchant_id),
+  KEY idx_sessions_host (host_user_id),
+  KEY idx_sessions_user_time (tiktok_username, started_at),
+  KEY idx_sessions_status (status),
+  CONSTRAINT fk_sessions_merchant FOREIGN KEY (merchant_id)
+    REFERENCES merchants(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_sessions_host FOREIGN KEY (host_user_id)
+    REFERENCES users(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_session_times CHECK (ended_at IS NULL OR ended_at >= started_at)
+) ENGINE=InnoDB;
+
+-- 6. TABEL SESSION_PINNED_PRODUCTS (Etalase Produk Pin Live)
+CREATE TABLE IF NOT EXISTS session_pinned_products (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id BIGINT UNSIGNED NOT NULL,
+  product_id BIGINT UNSIGNED NOT NULL,
+  pin_order INT UNSIGNED NOT NULL DEFAULT 1,
+  discount_price DECIMAL(12,2) NULL,
+  is_currently_pinned BOOLEAN NOT NULL DEFAULT FALSE,
+  pinned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_session_product (session_id, product_id),
+  KEY idx_spp_product (product_id),
+  CONSTRAINT fk_spp_session FOREIGN KEY (session_id)
+    REFERENCES live_sessions(id) ON DELETE CASCADE,
+  CONSTRAINT fk_spp_product FOREIGN KEY (product_id)
+    REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 7. TABEL MESSAGES (Komentar Chat Masuk)
+CREATE TABLE IF NOT EXISTS messages (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id BIGINT UNSIGNED NOT NULL,
+  message_time DATETIME(3) NOT NULL,
+  tiktok_user_id VARCHAR(100) NULL,
+  display_name VARCHAR(100) NULL,
+  message TEXT NOT NULL,
+  sentiment_label ENUM('positive', 'negative', 'neutral') NULL,
+  is_potential_buyer BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_messages_session_time (session_id, message_time),
+  CONSTRAINT fk_messages_session FOREIGN KEY (session_id)
+    REFERENCES live_sessions(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 8. TABEL ORDERS (Transaksi Kasir Live)
+CREATE TABLE IF NOT EXISTS orders (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id BIGINT UNSIGNED NOT NULL,
+  merchant_id BIGINT UNSIGNED NOT NULL,
+  order_number VARCHAR(50) NOT NULL,
+  buyer_name VARCHAR(100) NOT NULL,
+  buyer_phone VARCHAR(20) NOT NULL,
+  payment_method ENUM('cash_on_delivery', 'qris', 'bank_transfer', 'e_wallet') NOT NULL,
+  payment_status ENUM('unpaid', 'paid', 'refunded', 'cancelled') NOT NULL DEFAULT 'paid',
+  total_amount DECIMAL(12,2) NOT NULL,
+  order_time DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_orders_number (order_number),
+  KEY idx_orders_session (session_id),
+  KEY idx_orders_merchant (merchant_id),
+  CONSTRAINT fk_orders_session FOREIGN KEY (session_id)
+    REFERENCES live_sessions(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_orders_merchant FOREIGN KEY (merchant_id)
+    REFERENCES merchants(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_orders_total CHECK (total_amount >= 0)
+) ENGINE=InnoDB;
+
+-- 9. TABEL ORDER_ITEMS (Detail Item Kasir)
+CREATE TABLE IF NOT EXISTS order_items (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  order_id BIGINT UNSIGNED NOT NULL,
+  product_id BIGINT UNSIGNED NOT NULL,
+  quantity INT UNSIGNED NOT NULL DEFAULT 1,
+  unit_price DECIMAL(12,2) NOT NULL,
+  subtotal DECIMAL(12,2) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_items_order (order_id),
+  KEY idx_items_product (product_id),
+  CONSTRAINT fk_items_order FOREIGN KEY (order_id)
+    REFERENCES orders(id) ON DELETE CASCADE,
+  CONSTRAINT fk_items_product FOREIGN KEY (product_id)
+    REFERENCES products(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_items_quantity CHECK (quantity > 0)
+) ENGINE=InnoDB;
+
+-- 10. TABEL INSIGHTS (Laporan Analisis AI)
+CREATE TABLE IF NOT EXISTS insights (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id BIGINT UNSIGNED NOT NULL,
+  batch_type ENUM('5m', '20m', '45m') NOT NULL,
+  sentiment_score DECIMAL(5,4) NULL,
+  sentiment_trend ENUM('rising', 'falling', 'stable') NULL,
+  emerging_topics JSON NULL,
+  summary TEXT NOT NULL,
+  actionable_insight TEXT NOT NULL,
+  message_count INT UNSIGNED NOT NULL DEFAULT 0,
+  model_name VARCHAR(100) NOT NULL DEFAULT 'gemini-2.5-flash',
+  generated_at DATETIME(3) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_insights_session_type_time (session_id, batch_type, generated_at),
+  CONSTRAINT fk_insights_session FOREIGN KEY (session_id)
+    REFERENCES live_sessions(id) ON DELETE CASCADE,
+  CONSTRAINT chk_insights_sentiment CHECK (sentiment_score IS NULL OR (sentiment_score >= -1 AND sentiment_score <= 1))
+) ENGINE=InnoDB;
+
+-- 11. TABEL INSIGHT_MESSAGES (Traceability Pesan ke Insight 5m)
+CREATE TABLE IF NOT EXISTS insight_messages (
+  insight_id BIGINT UNSIGNED NOT NULL,
+  message_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (insight_id, message_id),
+  KEY idx_im_message (message_id),
+  CONSTRAINT fk_im_insight FOREIGN KEY (insight_id)
+    REFERENCES insights(id) ON DELETE CASCADE,
+  CONSTRAINT fk_im_message FOREIGN KEY (message_id)
+    REFERENCES messages(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 12. TABEL INSIGHT_DEPENDENCIES (Relasi Berjenjang Antar-Insight)
+CREATE TABLE IF NOT EXISTS insight_dependencies (
+  insight_id BIGINT UNSIGNED NOT NULL,
+  source_insight_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (insight_id, source_insight_id),
+  KEY idx_id_source (source_insight_id),
+  CONSTRAINT fk_id_insight FOREIGN KEY (insight_id)
+    REFERENCES insights(id) ON DELETE CASCADE,
+  CONSTRAINT fk_id_source_insight FOREIGN KEY (source_insight_id)
+    REFERENCES insights(id) ON DELETE CASCADE,
+  CONSTRAINT chk_not_self_dependency CHECK (insight_id <> source_insight_id)
+) ENGINE=InnoDB;</code></pre>
+  </div>
+
+  <!-- ==================== BAB 3 ==================== -->
+  <div class="section-break">
+    <h1>3. Sintaks SQL DML (Insert 5 Data Tiap Tabel)</h1>
+    <p>
+      Data contoh berikut dirancang realistis mengikuti skenario operasional siaran langsung TikTok Shop di Indonesia, dengan menjaga keutuhan relasi antar tabel secara konsisten.
+    </p>
+
+    <pre><code>-- 1. INSERT 5 DATA USERS
+INSERT INTO users (id, username, email, password_hash, full_name, role, phone_number) VALUES
+(1, 'aryo_streamer', 'aryo@streamly.id', '$2y$10$abcdef1234567890QWERTYuiopasdfghjklzxcvbnm12345678901', 'Aryo Abdillah A.', 'streamer', '081234567891'),
+(2, 'annisa_admin', 'annisa@glowupbeauty.com', '$2y$10$abcdef1234567890QWERTYuiopasdfghjklzxcvbnm12345678902', 'Annisa Nur Shadrina', 'store_admin', '081234567892'),
+(3, 'fadia_host', 'fadia@urbanstreet.co.id', '$2y$10$abcdef1234567890QWERTYuiopasdfghjklzxcvbnm12345678903', 'Fadia Nabila Shifa', 'streamer', '081234567893'),
+(4, 'refito_analyst', 'refito@agencygrowth.com', '$2y$10$abcdef1234567890QWERTYuiopasdfghjklzxcvbnm12345678904', 'Refito Rahmat F.', 'analyst', '081234567894'),
+(5, 'revaldi_host', 'revaldi@gadgetkita.com', '$2y$10$abcdef1234567890QWERTYuiopasdfghjklzxcvbnm12345678905', 'Revaldi Ramadhan N.', 'streamer', '081234567895');
+
+-- 2. INSERT 5 DATA MERCHANTS (TOKO)
+INSERT INTO merchants (id, owner_id, store_name, tiktok_shop_id, category, city) VALUES
+(1, 2, 'GlowUp Beauty Official', 'TTSHOP_GLOWUP_001', 'Beauty & Personal Care', 'Jakarta Selatan'),
+(2, 3, 'UrbanStreet Apparel', 'TTSHOP_URBAN_002', 'Fashion Pria & Wanita', 'Bandung'),
+(3, 2, 'DapurBunda Snack & Cookies', 'TTSHOP_DAPUR_003', 'Food & Beverage', 'Surabaya'),
+(4, 5, 'GadgetKita Store', 'TTSHOP_GADGET_004', 'Elektronik & Aksesoris', 'Semarang'),
+(5, 1, 'Batik Heritage Modern', 'TTSHOP_BATIK_005', 'Fashion Tradisional', 'Solo');
+
+-- 3. INSERT 5 DATA PRODUCTS (KATALOG BARANG)
+INSERT INTO products (id, merchant_id, sku, name, description, price, stock, category) VALUES
+(1, 1, 'GLW-SRM-01', 'GlowUp Niacinamide 10% Brightening Serum 30ml', 'Serum pencerah wajah ekstrak licorice dan zinc PCA.', 89000.00, 250, 'Skincare'),
+(2, 2, 'URB-HD-02', 'UrbanStreet Oversized Heavyweight Hoodie Black', 'Hoodie katun fleece tebal 330gsm jahitan rapi.', 219000.00, 80, 'Pakaian'),
+(3, 3, 'DPB-KRP-03', 'Keripik Kentang Balado Spesial Daun Jeruk 200g', 'Keripik kentang renyah bumbu cabai asli tanpa pengawet.', 35000.00, 500, 'Makanan Ringan'),
+(4, 4, 'GDT-TWS-04', 'GadgetKita True Wireless Earphones Pro Noise Cancelling', 'Bluetooth 5.3 latensi rendah 45ms baterai 24 jam.', 179000.00, 120, 'Aksesoris HP'),
+(5, 5, 'BTK-SLM-05', 'Kemeja Batik Katun Slimfit Motif Parang Modern', 'Batik katun primis halus dengan jahitan furing trikot.', 145000.00, 95, 'Kemeja');
+
+-- 4. INSERT 5 DATA LIVE_SESSIONS (SESI SIARAN)
+INSERT INTO live_sessions (id, merchant_id, host_user_id, title, tiktok_username, room_id, status, started_at, ended_at, total_views) VALUES
+(1, 1, 1, 'Gajian Cantik! Diskon Skincare Up to 50% + Free Gift', 'glowup_official', 'ROOM_7382910481920', 'ended', '2026-10-19 19:00:00.000', '2026-10-19 21:00:00.000', 8540),
+(2, 2, 3, 'Midnight Drop! Koleksi Hoodie Streetwear Terbaru', 'urbanstreet.id', 'ROOM_7382910481921', 'active', '2026-10-19 20:30:00.000', NULL, 4320),
+(3, 3, 1, 'Mukbang & Review Keripik Daun Jeruk Pedas Nampol', 'dapurbunda_live', 'ROOM_7382910481922', 'ended', '2026-10-18 14:00:00.000', '2026-10-18 15:45:00.000', 2890),
+(4, 4, 5, 'Spill Audio TWS Murah! Bass Nendang Test Mic', 'gadgetkita_shop', 'ROOM_7382910481923', 'ended', '2026-10-18 19:30:00.000', '2026-10-18 20:30:00.000', 6120),
+(5, 5, 5, 'Kemeja Batik Elegan Buat Wisuda & Ngantor Hemat', 'batikheritagemodern', 'ROOM_7382910481924', 'active', '2026-10-19 21:00:00.000', NULL, 1850);
+
+-- 5. INSERT 5 DATA SESSION_PINNED_PRODUCTS (ETALASE KERANJANG KUNING)
+INSERT INTO session_pinned_products (id, session_id, product_id, pin_order, discount_price, is_currently_pinned, pinned_at) VALUES
+(1, 1, 1, 1, 75000.00, TRUE, '2026-10-19 19:05:00'),
+(2, 2, 2, 1, 189000.00, TRUE, '2026-10-19 20:35:00'),
+(3, 3, 3, 1, 29000.00, FALSE, '2026-10-18 14:05:00'),
+(4, 4, 4, 1, 149000.00, FALSE, '2026-10-18 19:35:00'),
+(5, 5, 5, 1, 125000.00, TRUE, '2026-10-19 21:05:00');
+
+-- 6. INSERT 5 DATA MESSAGES (KOMENTAR CHAT)
+INSERT INTO messages (id, session_id, message_time, tiktok_user_id, display_name, message, sentiment_label, is_potential_buyer) VALUES
+(1, 1, '2026-10-19 19:07:12.150', 'tt_user_8819', 'Rina Pratiwi', 'Kak, serum etalase 1 aman buat kulit sensitif bruntusan gak?', 'positive', TRUE),
+(2, 1, '2026-10-19 19:08:45.300', 'tt_user_2234', 'Budi Santoso', 'Spill diskonnya dong kak, kalau beli 2 dapet gratis ongkir kan?', 'positive', TRUE),
+(3, 1, '2026-10-19 19:09:10.820', 'tt_user_9941', 'Dewi Lestari', 'Udah checkout etalase 1 kak! Tolong kirim malam ini juga yaa', 'positive', TRUE),
+(4, 1, '2026-10-19 19:10:02.410', 'tt_user_5512', 'Agus Setiawan', 'Kak suaranya kok agak kresek-kresek ya di live barusan?', 'negative', FALSE),
+(5, 1, '2026-10-19 19:11:15.600', 'tt_user_7733', 'Maya Sari', 'Serumnya ada sertifikat BPOM dan Halal gak kak?', 'neutral', TRUE);
+
+-- 7. INSERT 5 DATA ORDERS (KASIR & TRANSAKSI PEMBELIAN)
+INSERT INTO orders (id, session_id, merchant_id, order_number, buyer_name, buyer_phone, payment_method, payment_status, total_amount, order_time) VALUES
+(1, 1, 1, 'ORD-LIVE-20261019-001', 'Dewi Lestari', '082199887711', 'qris', 'paid', 75000.00, '2026-10-19 19:12:00.000'),
+(2, 1, 1, 'ORD-LIVE-20261019-002', 'Budi Santoso', '081344556677', 'e_wallet', 'paid', 150000.00, '2026-10-19 19:15:20.000'),
+(3, 2, 2, 'ORD-LIVE-20261019-003', 'Fikri Haikal', '085711223344', 'bank_transfer', 'paid', 189000.00, '2026-10-19 20:45:10.000'),
+(4, 3, 3, 'ORD-LIVE-20261018-004', 'Siti Rahmawati', '087822334455', 'cash_on_delivery', 'paid', 58000.00, '2026-10-18 14:30:00.000'),
+(5, 4, 4, 'ORD-LIVE-20261018-005', 'Kevin Pratama', '089633445566', 'qris', 'paid', 149000.00, '2026-10-18 19:42:30.000');
+
+-- 8. INSERT 5 DATA ORDER_ITEMS (DETAIL ITEM KASIR)
+INSERT INTO order_items (id, order_id, product_id, quantity, unit_price, subtotal) VALUES
+(1, 1, 1, 1, 75000.00, 75000.00),
+(2, 2, 1, 2, 75000.00, 150000.00),
+(3, 3, 2, 1, 189000.00, 189000.00),
+(4, 4, 3, 2, 29000.00, 58000.00),
+(5, 5, 4, 1, 149000.00, 149000.00);
+
+-- 9. INSERT 5 DATA INSIGHTS (LAPORAN ANALISIS AI)
+INSERT INTO insights (id, session_id, batch_type, sentiment_score, sentiment_trend, emerging_topics, summary, actionable_insight, message_count, model_name, generated_at) VALUES
+(1, 1, '5m', 0.8200, 'stable', '["kulit sensitif", "diskon beli 2", "bpom"]', 'Penonton antusias menanyakan kecocokan serum dan syarat promo diskon gajian.', 'Segera sematkan pin etalase 1 dan jelaskan izin resmi BPOM serum agar konversi checkout meningkat.', 48, 'gemini-2.5-flash', '2026-10-19 19:10:00.000'),
+(2, 1, '5m', 0.7500, 'falling', '["audio kresek", "packing aman", "spill tekstur"]', 'Terdapat keluhan minor mengenai kejelasan audio mic host, namun minat beli tetap stabil.', 'Periksa koneksi clip-on mic host lalu demonstrasikan oles tekstur serum di tangan.', 62, 'gemini-2.5-flash', '2026-10-19 19:15:00.000'),
+(3, 1, '5m', 0.8900, 'rising', '["promo bundle", "free gift", "checkout sukses"]', 'Lonjakan sentimen positif terjadi berkat bonus pouch bagi 10 pembeli tercepat.', 'Umumkan sisa kuota bonus flash sale secara berkala untuk memicu urgensi audiens.', 85, 'gemini-2.5-flash', '2026-10-19 19:20:00.000'),
+(4, 1, '20m', 0.8200, 'rising', '["rekomendasi skincare", "flash sale gajian", "kecepatan kirim"]', 'Evolusi obrolan menunjukkan pergeseran dari tanya jawab bahan menuju keputusan checkout massal.', 'Pertahankan momentum dengan menyebut nama-nama akun penonton yang baru checkout.', 240, 'gemini-2.5-flash', '2026-10-19 19:25:00.000'),
+(5, 1, '45m', 0.8450, 'stable', '["brand trust", "retensi tinggi", "sold out etalase 1"]', 'Secara umum sesi live berjalan efektif dengan tingkat retensi penonton tinggi dan stok menipis.', 'Siapkan produk etalase cadangan sebelum stok serum etalase 1 habis total.', 520, 'gemini-2.5-flash', '2026-10-19 19:50:00.000');
+
+-- 10. INSERT 5 DATA INSIGHT_MESSAGES (PROVENANCE)
+INSERT INTO insight_messages (insight_id, message_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5);
+
+-- 11. INSERT 5 DATA INSIGHT_DEPENDENCIES (SINTESIS HIERARKIS)
+INSERT INTO insight_dependencies (insight_id, source_insight_id) VALUES
+(4, 1),
+(4, 2),
+(4, 3),
+(5, 4),
+(5, 1);</code></pre>
+  </div>
+
+  <!-- ==================== BAB 4 ==================== -->
+  <div class="section-break">
+    <h1>4. Pembuktian Integritas Relasional</h1>
+    <p>
+      Berikut adalah contoh kueri pengujian untuk membuktikan relasi antar tabel (Kasir/Toko/Produk/Live Stream/Insight) berjalan dengan benar tanpa anomali data:
+    </p>
+
+    <h2>Kueri Pengujian 1: Laporan Kasir Penjualan Live per Sesi dan Toko</h2>
+    <pre><code>SELECT 
+    ls.id AS session_id,
+    m.store_name,
+    ls.title AS live_title,
+    o.order_number,
+    o.buyer_name,
+    p.name AS product_name,
+    oi.quantity,
+    oi.unit_price,
+    oi.subtotal,
+    o.payment_method
+FROM orders o
+JOIN live_sessions ls ON o.session_id = ls.id
+JOIN merchants m ON o.merchant_id = m.id
+JOIN order_items oi ON o.id = oi.order_id
+JOIN products p ON oi.product_id = p.id
+ORDER BY o.order_time DESC;</code></pre>
+
+    <h2>Kueri Pengujian 2: Korelasi Rekomendasi AI Insight dengan Respon Chat Audiens</h2>
+    <pre><code>SELECT 
+    i.batch_type,
+    i.sentiment_score,
+    i.actionable_insight,
+    msg.display_name,
+    msg.message,
+    msg.sentiment_label
+FROM insights i
+JOIN insight_messages im ON i.id = im.insight_id
+JOIN messages msg ON im.message_id = msg.id
+WHERE i.id = 1;</code></pre>
+
+    <div class="highlight-card">
+      <strong>Hasil Validasi Relasi:</strong><br>
+      Semua relasi Foreign Key (FK) tervalidasi dengan baik. Modul operasional toko dan kasir berhasil disatukan dengan modul real-time streaming Streamly, sehingga sistem tidak hanya berfungsi sebagai scraper komentar, melainkan solusi terpadu untuk <em>social commerce live streaming</em>.
+    </div>
+  </div>
+
+</body>
+</html>

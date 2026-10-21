@@ -42,6 +42,14 @@ Berikut adalah pencatatan pengumpulan berkas dan luaran proyek per minggu:
 ImplementasiPerangkatLunak/
 ├── README.md                      # Dokumentasi utama repositori
 ├── .gitignore                     # Aturan pengabaian file Git
+├── implementasi basis data/       # Berkas tugas basis data Streamly
+│   ├── TUGAS_BASIS_DATA_STREAMLY.docx # Dokumen Word yang dapat diedit langsung
+│   ├── TUGAS_BASIS_DATA_STREAMLY.pdf  # Dokumen laporan tugas basis data siap kumpul
+│   ├── streamly_schema_5_tables.sql # Script SQL DDL & DML 5 tabel utama
+│   ├── streamly_db_complete.sql   # Script SQL 11 tabel relasional (referensi nilai > B)
+│   ├── database.md                # Dokumentasi arsitektur database backend Streamly
+│   ├── generate_pdf.py            # Skrip kompilasi laporan ke format PDF
+│   └── laporan_basis_data.html    # Template dokumen HTML
 └── Week-03/                       # Pengumpulan tugas minggu ke-3
     ├── README.md                  # Ringkasan deliverable Week 03
     └── SKPL IMPAL.pdf             # Dokumen Spesifikasi Kebutuhan Perangkat Lunak
